@@ -17,12 +17,12 @@ import logic.Controller;
  *
  * @author Aleksa
  */
-public class FrmRegister extends javax.swing.JPanel {
+public class FrmAddTrener extends javax.swing.JPanel {
 
     /**
      * Creates new form frmRegister
      */
-    public FrmRegister() throws SQLException {
+    public FrmAddTrener() throws SQLException {
         prepareView();
         
     }
@@ -147,7 +147,7 @@ public class FrmRegister extends javax.swing.JPanel {
                                 .addComponent(txtPass1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                             .addGap(8, 8, 8))))
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

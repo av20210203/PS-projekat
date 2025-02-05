@@ -9,6 +9,9 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -28,7 +31,7 @@ public class FrmLogin extends javax.swing.JPanel {
         initComponents();
         btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnCancel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblReg.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         
         
     }
@@ -48,7 +51,6 @@ public class FrmLogin extends javax.swing.JPanel {
         lblPassword = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
-        lblReg = new javax.swing.JLabel();
 
         lblUsername.setText("Korisničko ime:");
 
@@ -65,19 +67,6 @@ public class FrmLogin extends javax.swing.JPanel {
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
-            }
-        });
-
-        lblReg.setText("Nemaš nalog? Registruj se");
-        lblReg.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblRegMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblRegMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblRegMouseExited(evt);
             }
         });
 
@@ -98,12 +87,9 @@ public class FrmLogin extends javax.swing.JPanel {
                             .addComponent(txtPassword)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnLogin)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancel))
-                            .addComponent(lblReg, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addComponent(btnLogin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancel)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -121,9 +107,7 @@ public class FrmLogin extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
                     .addComponent(btnCancel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblReg)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -147,30 +131,11 @@ public class FrmLogin extends javax.swing.JPanel {
         System.exit(0);
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void lblRegMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegMouseEntered
-       lblReg.setForeground(Color.BLUE);
-    }//GEN-LAST:event_lblRegMouseEntered
-
-    private void lblRegMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegMouseExited
-        lblReg.setForeground(Color.BLACK);
-    }//GEN-LAST:event_lblRegMouseExited
-
-    private void lblRegMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegMouseClicked
-        JDialog dialog=new JDialog((JFrame)null, "Register", true);
-        JPanel panel=new FrmRegister();
-        dialog.add(panel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.setVisible(true);
-    }//GEN-LAST:event_lblRegMouseClicked
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnLogin;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblReg;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;

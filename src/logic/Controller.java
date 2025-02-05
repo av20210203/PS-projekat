@@ -8,6 +8,7 @@ import database.DatabaseBroker;
 import domain.Klijent;
 import domain.NivoFizickeSpreme;
 import domain.Sertifikat;
+import domain.Termin;
 import domain.Trener;
 import java.sql.SQLException;
 import java.util.List;
@@ -48,5 +49,17 @@ public class Controller {
 
     public List<Sertifikat> getAllSertifikat() throws SQLException {
         return dbbr.getAllSertifikati();
+    }
+
+    public void createSertifikat(Sertifikat sertifikat) throws SQLException {
+        dbbr.createSertifikati(sertifikat);   
+    }
+
+    public void createNivo(NivoFizickeSpreme n) throws SQLException {
+    dbbr.createNivoi(n);
+    }
+
+    public void createTermin(Termin termin) {
+        dbbr.createTermini(termin);
     }
 }

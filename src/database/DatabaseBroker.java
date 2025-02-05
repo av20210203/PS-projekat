@@ -7,6 +7,7 @@ package database;
 import domain.Klijent;
 import domain.NivoFizickeSpreme;
 import domain.Sertifikat;
+import domain.Termin;
 import domain.Trener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -159,6 +160,72 @@ public class DatabaseBroker {
         rs.close();
         statement.close();
         return sertifikati;
+    }
+
+    public void createSertifikati(Sertifikat sertifikat) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        
+        String query = "INSERT INTO sertifikat (naziv, opis) VALUES (?,?)";
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        
+            statement.setString(1, sertifikat.getNaziv());
+            statement.setString(2, sertifikat.getOpis());
+             
+             
+             int result = statement.executeUpdate();
+            ResultSet rsID = statement.getGeneratedKeys();
+            if (rsID.next()) {
+                sertifikat.setIdSertifikat(rsID.getLong(1));
+            }
+            rsID.close();
+            statement.close();
+
+            System.out.println("Vrednost generisanog primarnog kljuca je: " + sertifikat.getIdSertifikat());
+            System.out.println("Objekat Sertifikat uspesno dodat u bazu!");
+    }
+
+    public void createNivoi(NivoFizickeSpreme n) throws SQLException {
+Connection connection = DatabaseConnection.getInstance().getConnection();
+        
+        String query = "INSERT INTO nivofizickespreme (nivo, opis) VALUES (?,?)";
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        
+            statement.setString(1, n.getNivo());
+            statement.setString(2, n.getOpis());
+             
+             
+             int result = statement.executeUpdate();
+            ResultSet rsID = statement.getGeneratedKeys();
+            if (rsID.next()) {
+                n.setIdNivoFizickeSpreme(rsID.getLong(1));
+            }
+            rsID.close();
+            statement.close();
+
+            System.out.println("Vrednost generisanog primarnog kljuca je: " + n.getIdNivoFizickeSpreme());
+            System.out.println("Objekat Termin uspesno dodat u bazu!");
+    }
+
+    public void createTermini(Termin termin) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        
+        String query = "INSERT INTO termin (datum, cenaPoSatu) VALUES (?,?)";
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        
+            statement.setDate(1, Date.valueOf(termin.getDatum()));
+            statement.setLong(2, termin.getCenaPoSatu());
+             
+             
+             int result = statement.executeUpdate();
+            ResultSet rsID = statement.getGeneratedKeys();
+            if (rsID.next()) {
+                termin.setIdTermin(rsID.getLong(1));
+            }
+            rsID.close();
+            statement.close();
+
+            System.out.println("Vrednost generisanog primarnog kljuca je: " + termin.getIdTermin());
+            System.out.println("Objekat Termin uspesno dodat u bazu!");
     }
     
 }

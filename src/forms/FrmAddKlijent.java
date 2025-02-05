@@ -182,6 +182,7 @@ if (!prezime.matches("^[A-Za-z]+$")) {
             Controller controller = Controller.getInstance();
             controller.createKlijent(klijent);
             JOptionPane.showMessageDialog(this, "Klijent je uspešno sačuvan u bazi!", "Sačuvan klijent!", JOptionPane.INFORMATION_MESSAGE);
+            this.getTopLevelAncestor().setVisible(false);
         } catch (Exception ex) {
             if (ex.getMessage().contains("Duplicate entry")) { 
         JOptionPane.showMessageDialog(this, "Već postoji klijent sa datim emailom!", "Greška", JOptionPane.ERROR_MESSAGE);
