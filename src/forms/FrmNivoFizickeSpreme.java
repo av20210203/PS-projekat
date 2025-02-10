@@ -4,9 +4,16 @@
  */
 package forms;
 
+import components.NivoTableModel;
+import domain.NivoFizickeSpreme;
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import logic.Controller;
 
 /**
  *
@@ -18,7 +25,7 @@ public class FrmNivoFizickeSpreme extends javax.swing.JFrame {
      * Creates new form FrmNivoFizickeSpreme
      */
     public FrmNivoFizickeSpreme() {
-        initComponents();
+        prepareView();
     }
 
     /**
@@ -32,6 +39,12 @@ public class FrmNivoFizickeSpreme extends javax.swing.JFrame {
 
         btnKreiraj = new javax.swing.JButton();
         btnIzađi = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblNivo = new javax.swing.JTable();
+        btnPretrazi = new javax.swing.JButton();
+        txtPretrazi = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        btnDetalji = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,27 +62,76 @@ public class FrmNivoFizickeSpreme extends javax.swing.JFrame {
             }
         });
 
+        tblNivo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblNivo);
+
+        btnPretrazi.setText("Pretraži");
+
+        jLabel1.setText("Nivo:");
+
+        btnDetalji.setText("Detalji");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(btnKreiraj)
-                .addContainerGap(318, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnIzađi)
-                .addGap(41, 41, 41))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnPretrazi))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnKreiraj)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPretrazi, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnIzađi)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 17, Short.MAX_VALUE)))))
+                .addGap(17, 17, 17))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(506, 506, 506)
+                .addComponent(btnDetalji)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(btnKreiraj)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnKreiraj)
+                        .addGap(106, 106, 106))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPretrazi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPretrazi)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDetalji)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnIzađi)
-                .addGap(37, 37, 37))
+                .addGap(81, 81, 81))
         );
 
         pack();
@@ -77,15 +139,20 @@ public class FrmNivoFizickeSpreme extends javax.swing.JFrame {
 
     private void btnKreirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKreirajActionPerformed
         try {
+            NivoFizickeSpreme n = new NivoFizickeSpreme();
             JDialog dialog = new JDialog(this, "Kreiraj nivo fizičke spreme", true);
-            JPanel panel = new FrmAddNivoFizickeSpreme();
+            JPanel panel = new FrmAddNivoFizickeSpreme(n);
             dialog.add(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(this);
             dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            Controller controller = Controller.getInstance();
+            controller.createNivoFizickeSpreme(n);
+            JOptionPane.showMessageDialog(this, "Sistem je kreirao nivo fizičke spreme!", "Kreiraj nivo fizičke spreme", JOptionPane.INFORMATION_MESSAGE);
             dialog.setVisible(true);
+            fillTableNivo();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom otvaranje forme!" + ex.getMessage(), "Kreiraj nivo fizičke spreme", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sistem ne može da kreira nivo fizičke spreme!" + ex.getMessage(), "Kreiraj nivo fizičke spreme", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnKreirajActionPerformed
 
@@ -99,7 +166,56 @@ public class FrmNivoFizickeSpreme extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDetalji;
     private javax.swing.JButton btnIzađi;
     private javax.swing.JButton btnKreiraj;
+    private javax.swing.JButton btnPretrazi;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblNivo;
+    private javax.swing.JTextField txtPretrazi;
     // End of variables declaration//GEN-END:variables
+
+    private void prepareView() {
+    initComponents();
+    tblNivo.setModel(new NivoTableModel(List.of())); 
+    btnPretrazi.addActionListener(e -> pretraziNivoe());
 }
+
+    private void fillTableNivo() {
+        try {
+            Controller controller = Controller.getInstance();
+            List<NivoFizickeSpreme> nivoi = controller.getAllNivo();
+            TableModel nivoTableModel = new NivoTableModel(nivoi);
+            tblNivo.setModel(nivoTableModel);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+   private void pretraziNivoe() {
+    String filterText = txtPretrazi.getText().trim();
+    
+    if (filterText.isEmpty()) {
+        tblNivo.setModel(new NivoTableModel(List.of())); 
+        return;
+    }
+
+    try {
+        Controller controller = Controller.getInstance();
+        List<NivoFizickeSpreme> nivoi = controller.getAllNivo();
+        
+        List<NivoFizickeSpreme> filtriraniNivoi = nivoi.stream()
+            .filter(nivo -> nivo.getNivo().toLowerCase().contains(filterText.toLowerCase()))
+            .toList();
+
+        tblNivo.setModel(new NivoTableModel(filtriraniNivoi));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+}
+
+

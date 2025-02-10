@@ -92,7 +92,7 @@ public class Trener {
 
     @Override
     public String toString() {
-        return "Trener{" + "idTrener=" + idTrener + ", ime=" + ime + ", prezime=" + prezime + ", email=" + email + '}';
+        return ime+" "+prezime;
     }
     
     

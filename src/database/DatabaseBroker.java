@@ -4,9 +4,12 @@
  */
 package database;
 
+import database.DatabaseConnection;
+import domain.EvidencijaTreninga;
 import domain.Klijent;
 import domain.NivoFizickeSpreme;
 import domain.Sertifikat;
+import domain.StavkaEvidencijeTreninga;
 import domain.Termin;
 import domain.Trener;
 import java.sql.PreparedStatement;
@@ -17,6 +20,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import javax.swing.JOptionPane;
 /**
  *
@@ -62,18 +66,19 @@ public class DatabaseBroker {
         }
     }
 
-    public void registerTrener(Trener trener, List<Sertifikat> sertifikati) throws SQLException {
+    public void createTreneri(Trener trener) throws SQLException {
         
         Connection connection = DatabaseConnection.getInstance().getConnection();
-        
+        String email = "temp_email_" + UUID.randomUUID().toString() + "@example.com";
+        String username = "temp_username_" + UUID.randomUUID().toString();
         String query = "INSERT INTO trener (ime, prezime, korisnickoIme, sifra, email) VALUES (?,?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
          
-            statement.setString(1, trener.getIme());
-            statement.setString(2, trener.getPrezime());
-            statement.setString(3, trener.getKorisnickoIme());
-            statement.setString(4, trener.getSifra());
-             statement.setString(5, trener.getEmail());
+            statement.setString(1, "");
+            statement.setString(2, "");
+            statement.setString(3, username);
+            statement.setString(4, "");
+             statement.setString(5, email);
             
             int result = statement.executeUpdate();
             ResultSet rsID = statement.getGeneratedKeys();
@@ -86,19 +91,7 @@ public class DatabaseBroker {
             System.out.println("Vrednost generisanog primarnog kljuca je: " + trener.getIdTrener());
             System.out.println("Objekat Trener uspesno dodat u bazu!");
             
-            String query1 = "INSERT INTO ts (idTrener, idSertifikat, datum) VALUES (?,?,?)";
-        PreparedStatement statementSertifikat = connection.prepareStatement(query1);
-
-        for (Sertifikat s : sertifikati) {
-            statementSertifikat.setLong(1, trener.getIdTrener()); 
-            statementSertifikat.setLong(2, s.getIdSertifikat()); 
-            statementSertifikat.setDate(3, Date.valueOf(LocalDate.now()));
-            statementSertifikat.executeUpdate();
-        }
-
-        statementSertifikat.close();
-        System.out.println("Sertifikati uspesno povezani sa trenerom!");
-         
+           
     }
 
     public List<NivoFizickeSpreme> getAllNivos() throws SQLException {
@@ -122,14 +115,15 @@ public class DatabaseBroker {
 
     public void createKlijenti(Klijent klijent) throws SQLException {
    Connection connection = DatabaseConnection.getInstance().getConnection();
-        
+         String email = "temp_email_" + UUID.randomUUID().toString() + "@example.com";
+       
         String query = "INSERT INTO klijent (ime, prezime, email, idNivoFizickeSpreme) VALUES (?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         
-        statement.setString(1, klijent.getIme());
-            statement.setString(2, klijent.getPrezime());
-             statement.setString(3, klijent.getEmail());
-             statement.setLong(4, klijent.getNivoFizickeSpreme().getIdNivoFizickeSpreme());
+        statement.setString(1,  "");
+            statement.setString(2, "");
+             statement.setString(3, email);
+             statement.setLong(4, 12);
              
              int result = statement.executeUpdate();
             ResultSet rsID = statement.getGeneratedKeys();
@@ -162,7 +156,7 @@ public class DatabaseBroker {
         return sertifikati;
     }
 
-    public void createSertifikati(Sertifikat sertifikat) throws SQLException {
+    public void ubaciSertifikati(Sertifikat sertifikat) throws SQLException {
         Connection connection = DatabaseConnection.getInstance().getConnection();
         
         String query = "INSERT INTO sertifikat (naziv, opis) VALUES (?,?)";
@@ -184,14 +178,14 @@ public class DatabaseBroker {
             System.out.println("Objekat Sertifikat uspesno dodat u bazu!");
     }
 
-    public void createNivoi(NivoFizickeSpreme n) throws SQLException {
+    public void createNivoiFizickeSpreme(NivoFizickeSpreme n) throws SQLException {
 Connection connection = DatabaseConnection.getInstance().getConnection();
-        
+ 
         String query = "INSERT INTO nivofizickespreme (nivo, opis) VALUES (?,?)";
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         
-            statement.setString(1, n.getNivo());
-            statement.setString(2, n.getOpis());
+            statement.setString(1, "");
+            statement.setString(2, "");
              
              
              int result = statement.executeUpdate();
@@ -212,8 +206,8 @@ Connection connection = DatabaseConnection.getInstance().getConnection();
         String query = "INSERT INTO termin (datum, cenaPoSatu) VALUES (?,?)";
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         
-            statement.setDate(1, Date.valueOf(termin.getDatum()));
-            statement.setLong(2, termin.getCenaPoSatu());
+            statement.setDate(1, Date.valueOf(LocalDate.now()));
+            statement.setLong(2, 0);
              
              
              int result = statement.executeUpdate();
@@ -227,5 +221,195 @@ Connection connection = DatabaseConnection.getInstance().getConnection();
             System.out.println("Vrednost generisanog primarnog kljuca je: " + termin.getIdTermin());
             System.out.println("Objekat Termin uspesno dodat u bazu!");
     }
+
+    public List<Trener> getAllTreneri() throws SQLException {
+        List<Trener> treneri = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String query = "SELECT idTrener, ime, prezime, korisnickoIme, sifra, email FROM trener";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+        while (rs.next()) {
+                
+                Long id = rs.getLong("idTrener");
+               String ime = rs.getString("ime");
+               String prezime = rs.getString("prezime");
+               String username = rs.getString("korisnickoIme");
+               String pass = rs.getString("sifra");
+               String email = rs.getString("email");
+               Trener trener = new Trener(id,ime,prezime,username,pass,email);
+                treneri.add(trener);
+            }
+        rs.close();
+        statement.close();
+        return treneri;
+    }
+
+    public List<Klijent> getAllKlijenti() throws SQLException {
+        List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String query = "SELECT idKlijent, ime, prezime, email FROM klijent";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+        while (rs.next()) {
+                
+                Long id = rs.getLong("idKlijent");
+               String ime = rs.getString("ime");
+               String prezime = rs.getString("prezime");
+               String email = rs.getString("email");
+               Klijent klijent = new Klijent(id,ime,prezime,email);
+                klijenti.add(klijent);
+            }
+        rs.close();
+        statement.close();
+        return klijenti;
+    }
+
+    public List<Termin> getAllTermini() throws SQLException {
+    List<Termin> termini = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String query = "SELECT idTermin, datum, cenaPoSatu FROM termin";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+        while (rs.next()) {
+                
+                Long id = rs.getLong("idTermin");
+                LocalDate datum = rs.getDate("datum").toLocalDate();
+               Long cenaPoSatu = rs.getLong("cenaPoSatu");
+              
+               Termin termin = new Termin(id,datum,cenaPoSatu);
+                termini.add(termin);
+            }
+        rs.close();
+        statement.close();
+        return termini;
+    }
+
+    public void createEvidencijeTreninga(EvidencijaTreninga ev) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        
+        String query = "INSERT INTO evidencijatreninga (ukupnaCena, idKlijent, idTrener ) VALUES (?,?,?)";
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        
+            statement.setLong(1, 0);
+            statement.setLong(2, 42);
+            statement.setLong(3, 123);
+             
+             
+             int result = statement.executeUpdate();
+            ResultSet rsID = statement.getGeneratedKeys();
+            if (rsID.next()) {
+                ev.setIdEvidencijaTreninga(rsID.getLong(1));
+            }
+            rsID.close();
+            statement.close();
+
+            System.out.println("Vrednost generisanog primarnog kljuca je: " + ev.getIdEvidencijaTreninga());
+            System.out.println("Objekat Evidencija treninga uspesno dodata u bazu!");
+            
+          
+            
+            }
+        
     
+
+    public void updateKlijenti(Klijent klijent) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();   
+            
+            String query = "UPDATE klijent SET ime = ?, prezime = ?, email = ?, idNivoFizickeSpreme = ? WHERE idKlijent=?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, klijent.getIme());
+            ps.setString(2, klijent.getPrezime());
+            ps.setString(3, klijent.getEmail());
+            ps.setLong(4, klijent.getNivoFizickeSpreme().getIdNivoFizickeSpreme());
+            ps.setLong(5, klijent.getIdKlijent());
+            ps.executeUpdate();
+            ps.close();
+    }
+
+    public void updateTreneri(Trener trener, List<Sertifikat> sertifikati) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();   
+            
+            String query = "UPDATE trener SET ime = ?, prezime = ?, korisnickoIme=?, sifra=?, email = ? WHERE idTrener=?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, trener.getIme());
+            ps.setString(2, trener.getPrezime());
+            ps.setString(3, trener.getKorisnickoIme());
+            ps.setString(4, trener.getSifra());
+            ps.setString(5, trener.getEmail());
+            ps.setLong(6, trener.getIdTrener());
+            ps.executeUpdate();
+            ps.close();
+            
+             String query1 = "INSERT INTO ts (idTrener, idSertifikat, datum) VALUES (?,?,?)";
+        PreparedStatement statementSertifikat = connection.prepareStatement(query1);
+
+        for (Sertifikat s : sertifikati) {
+            statementSertifikat.setLong(1, trener.getIdTrener()); 
+            statementSertifikat.setLong(2, s.getIdSertifikat()); 
+            statementSertifikat.setDate(3, Date.valueOf(LocalDate.now()));
+            statementSertifikat.executeUpdate();
+        }
+
+        statementSertifikat.close();
+        System.out.println("Sertifikati uspesno povezani sa trenerom!");
+         
+    }
+
+    public void updateTermini(Termin termin) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();   
+            
+            String query = "UPDATE termin SET datum = ?, cenaPoSatu = ? WHERE idTermin=?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setDate(1, Date.valueOf(termin.getDatum()));
+            ps.setLong(2, termin.getCenaPoSatu());
+            ps.setLong(3, termin.getIdTermin());
+            
+            ps.executeUpdate();
+            ps.close();
+    }
+
+    public void updateNivoiFizickeSpreme(NivoFizickeSpreme n) throws SQLException {
+        Connection connection = DatabaseConnection.getInstance().getConnection();   
+            
+            String query = "UPDATE nivofizickespreme SET nivo = ?, opis = ? WHERE idNivoFizickeSpreme = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, n.getNivo());
+            ps.setString(2, n.getOpis());
+            ps.setLong(3, n.getIdNivoFizickeSpreme());
+            
+            ps.executeUpdate();
+            ps.close();
+    }
+
+    public void updateEvidencijeTreninga(EvidencijaTreninga ev, List<StavkaEvidencijeTreninga> stavke) throws SQLException {
+ Connection connection = DatabaseConnection.getInstance().getConnection();   
+            
+            String query = "UPDATE evidencijatreninga SET ukupnaCena = ?, idKlijent = ?, idTrener = ? WHERE idEvidencijaTreninga = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setLong(1, ev.getUkupnaCena());
+            ps.setLong(2, ev.getKlijent().getIdKlijent());
+            ps.setLong(3, ev.getTrener().getIdTrener());
+            ps.setLong(4, ev.getIdEvidencijaTreninga());
+            ps.executeUpdate();
+            ps.close();
+              for(StavkaEvidencijeTreninga stavka : stavke){
+            String query1 = "INSERT INTO stavkaevidencijetreninga (idEvidencijaTreninga, rb, ocena, vremeOd, vremeDo, cena, idTermin) VALUES (?,?,?,?,?,?,?)";
+            PreparedStatement statement1 = connection.prepareStatement(query1);
+            
+            statement1.setLong(1, ev.getIdEvidencijaTreninga());
+            statement1.setLong(2, stavka.getRb());
+            statement1.setLong(3, stavka.getOcena());
+            statement1.setTime(4, Time.valueOf(stavka.getVremeOd()));
+            statement1.setTime(5, Time.valueOf(stavka.getVremeDo()));
+            statement1.setLong(6, stavka.getCena());
+            statement1.setLong(7, stavka.getTermin().getIdTermin());
+            
+            int result1 = statement1.executeUpdate();
+    }
+
+   
+
+    
+    
+}
 }

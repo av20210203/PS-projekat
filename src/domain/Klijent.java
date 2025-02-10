@@ -76,7 +76,14 @@ public class Klijent {
 
     @Override
     public String toString() {
-        return "Klijent{" + "idKlijent=" + idKlijent + ", ime=" + ime + ", prezime=" + prezime + ", email=" + email + ", nivoFizickeSpreme=" + nivoFizickeSpreme + '}';
+        return ime+" "+prezime;
+    }
+
+    public Klijent(Long idKlijent, String ime, String prezime, String email) {
+        this.idKlijent = idKlijent;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.email = email;
     }
     
     

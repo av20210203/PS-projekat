@@ -15,11 +15,12 @@ import logic.Controller;
  * @author Aleksa
  */
 public class FrmAddTermin extends javax.swing.JPanel {
-
+Termin termin;
     /**
      * Creates new form FrmAddTermin
      */
-    public FrmAddTermin() {
+    public FrmAddTermin(Termin termin) {
+        this.termin=termin;
         initComponents();
     }
 
@@ -112,15 +113,16 @@ public class FrmAddTermin extends javax.swing.JPanel {
         try{
         LocalDate datum = LocalDate.parse(txtDatum.getText(), DateTimeFormatter.ofPattern("yyyy-dd-MM"));
         Long cena = Long.parseLong(txtCena.getText());
-        Termin termin = new Termin(datum,cena);
-        Controller controller = Controller.getInstance();
-            controller.createTermin(termin);
-            JOptionPane.showMessageDialog(this, "Termin je uspešno sačuvan u bazi!", "Sačuvan termin!", JOptionPane.INFORMATION_MESSAGE);
+       termin.setDatum(datum);
+       termin.setCenaPoSatu(cena);
+       
+       Controller controller = Controller.getInstance();
+       controller.updateTermin(termin);
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio termin!" + "\n"+ termin, "Sačuvan termin!", JOptionPane.INFORMATION_MESSAGE);
             this.getTopLevelAncestor().setVisible(false);
         }catch (Exception ex) {
-         
         JOptionPane.showMessageDialog(this, "Unesite datum u formatu yyyy-dd-MM!", "Greška", JOptionPane.ERROR_MESSAGE);
-    
+        JOptionPane.showMessageDialog(this, "Sistem ne može da zapamti termin!", "Greška", JOptionPane.ERROR_MESSAGE);
         }
         
         

@@ -4,10 +4,12 @@
  */
 package forms;
 
+import domain.Klijent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import logic.Controller;
 
 /**
  *
@@ -82,15 +84,20 @@ public class FrmKlijent extends javax.swing.JFrame {
 
     private void btnKreirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKreirajActionPerformed
         try {
+            Klijent klijent = new Klijent();
             JDialog dialog = new JDialog(this, "Kreiraj klijenta", true);
-            JPanel panel = new FrmAddKlijent();
+            JPanel panel = new FrmAddKlijent(klijent);
             dialog.add(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(this);
             dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            Controller controller = Controller.getInstance();
+            controller.createKlijent(klijent);
+            JOptionPane.showMessageDialog(this, "Sistem je kreirao klijenta!", "Kreiraj klijenta", JOptionPane.INFORMATION_MESSAGE);
             dialog.setVisible(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom otvaranje forme!" + ex.getMessage(), "Kreiraj klijenta", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Sistem ne može da kreira klijenta!", "Kreiraj klijenta", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnKreirajActionPerformed
 

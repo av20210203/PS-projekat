@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import logic.Controller;
 
@@ -20,11 +21,12 @@ import logic.Controller;
  * @author Aleksa
  */
 public class FrmAddKlijent extends javax.swing.JPanel {
-
+Klijent klijent;
     /**
      * Creates new form FrmAddKlijent
      */
-    public FrmAddKlijent() throws Exception {
+    public FrmAddKlijent(Klijent klijent) throws Exception {
+        this.klijent = klijent;
         initComponents();
         prepareView();
     }
@@ -178,16 +180,20 @@ if (!prezime.matches("^[A-Za-z]+$")) {
             ime = ime.substring(0, 1).toUpperCase() + ime.substring(1).toLowerCase();
     prezime = prezime.substring(0, 1).toUpperCase() + prezime.substring(1).toLowerCase();
     
-            Klijent klijent=new Klijent(ime,prezime,email,nivo);
+            klijent.setIme(ime);
+            klijent.setPrezime(prezime);
+            klijent.setEmail(email);
+            klijent.setNivoFizickeSpreme(nivo);
             Controller controller = Controller.getInstance();
-            controller.createKlijent(klijent);
-            JOptionPane.showMessageDialog(this, "Klijent je uspešno sačuvan u bazi!", "Sačuvan klijent!", JOptionPane.INFORMATION_MESSAGE);
+            controller.updateKlijent(klijent);
+            
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio klijenta!" + "\n"+ klijent, "Sačuvan klijent!", JOptionPane.INFORMATION_MESSAGE);
             this.getTopLevelAncestor().setVisible(false);
         } catch (Exception ex) {
             if (ex.getMessage().contains("Duplicate entry")) { 
         JOptionPane.showMessageDialog(this, "Već postoji klijent sa datim emailom!", "Greška", JOptionPane.ERROR_MESSAGE);
     } else {
-        JOptionPane.showMessageDialog(this, "Došlo je do greške: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Sistem ne možе da zapamti klijenta!", "Greška", JOptionPane.ERROR_MESSAGE);
     }
         }
     }//GEN-LAST:event_btnDodajActionPerformed
@@ -214,7 +220,12 @@ if (!prezime.matches("^[A-Za-z]+$")) {
     private void fillNivo() throws Exception {
         Controller controller = Controller.getInstance();
         List<NivoFizickeSpreme> nivoi = controller.getAllNivo();
-        for(NivoFizickeSpreme nivo : nivoi){
+        List<NivoFizickeSpreme> filtriraniNivoi = nivoi.stream()
+    .filter(nivo -> !(nivo.getIdNivoFizickeSpreme() == 12 || nivo.getNivo().equals("")))
+    .collect(Collectors.toList());
+
+        
+        for(NivoFizickeSpreme nivo : filtriraniNivoi){
         cmbNivo.addItem(nivo);
         }
     }

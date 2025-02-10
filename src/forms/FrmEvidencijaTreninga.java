@@ -4,9 +4,11 @@
  */
 package forms;
 
+import domain.EvidencijaTreninga;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import logic.Controller;
 
 /**
  *
@@ -77,15 +79,19 @@ public class FrmEvidencijaTreninga extends javax.swing.JFrame {
 
     private void btnKreirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKreirajActionPerformed
         try {
+            EvidencijaTreninga ev = new EvidencijaTreninga();
             JDialog dialog = new JDialog(this, "Kreiraj evidenciju treninga", true);
-            JPanel panel = new FrmAddEvidencijaTreninga();
+            JPanel panel = new FrmAddEvidencijaTreninga(ev);
             dialog.add(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(this);
             dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            Controller controller = Controller.getInstance();
+            controller.createEvidencijaTreninga(ev);
+            JOptionPane.showMessageDialog(this, "Sistem je kreirao evidenciju treninga!", "Kreiraj evidenciju treninga", JOptionPane.INFORMATION_MESSAGE);
             dialog.setVisible(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom otvaranje forme!" + ex.getMessage(), "Kreiraj evidenciju treninga", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sistem ne može da kreira evidenciju treninga!" + ex.getMessage(), "Kreiraj evidenciju treninga", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnKreirajActionPerformed
 

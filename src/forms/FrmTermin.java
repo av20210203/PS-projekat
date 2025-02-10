@@ -4,9 +4,11 @@
  */
 package forms;
 
+import domain.Termin;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import logic.Controller;
 
 /**
  *
@@ -77,15 +79,20 @@ public class FrmTermin extends javax.swing.JFrame {
 
     private void btnKreirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKreirajActionPerformed
         try {
+            Termin termin = new Termin();
             JDialog dialog = new JDialog(this, "Kreiraj termin", true);
-            JPanel panel = new FrmAddTermin();
+            JPanel panel = new FrmAddTermin(termin);
             dialog.add(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(this);
             dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            Controller controller = Controller.getInstance();
+            controller.createTermin(termin);
+            JOptionPane.showMessageDialog(this, "Sistem je kreirao termin!", "Kreiraj termin", JOptionPane.INFORMATION_MESSAGE);
             dialog.setVisible(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom otvaranje forme!" + ex.getMessage(), "Kreiraj termin", JOptionPane.ERROR_MESSAGE);
+           
+            JOptionPane.showMessageDialog(this, "Sistem ne može da kreira termin!", "Kreiraj termin", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnKreirajActionPerformed
 

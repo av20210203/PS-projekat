@@ -4,9 +4,11 @@
  */
 package forms;
 
+import domain.Trener;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import logic.Controller;
 
 /**
  *
@@ -77,15 +79,19 @@ public class FrmTrener extends javax.swing.JFrame {
 
     private void btnKreirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKreirajActionPerformed
         try {
+            Trener trener = new Trener();
             JDialog dialog = new JDialog(this, "Kreiraj trenera", true);
-            JPanel panel = new FrmAddTrener();
+            JPanel panel = new FrmAddTrener(trener);
             dialog.add(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(this);
             dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            Controller controller = Controller.getInstance();
+         controller.createTrener(trener);
+         JOptionPane.showMessageDialog(this, "Sistem je kreirao trenera!", "Kreiraj trenera", JOptionPane.INFORMATION_MESSAGE);
             dialog.setVisible(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom otvaranje forme!" + ex.getMessage(), "Kreiraj trenera", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sistem ne može da kreira trenera" + ex.getMessage(), "Kreiraj trenera", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnKreirajActionPerformed
 

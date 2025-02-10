@@ -13,12 +13,13 @@ import logic.Controller;
  * @author Aleksa
  */
 public class FrmAddSertifikat extends javax.swing.JPanel {
-
+    
     /**
      * Creates new form FrmAddSertifikat
      */
     public FrmAddSertifikat() {
         initComponents();
+       
     }
 
     /**
@@ -30,17 +31,17 @@ public class FrmAddSertifikat extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnDodaj = new javax.swing.JButton();
+        btnZapamti = new javax.swing.JButton();
         btnIzlaz = new javax.swing.JButton();
         txtNaziv = new javax.swing.JTextField();
         txtOpis = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
-        btnDodaj.setText("Dodaj");
-        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+        btnZapamti.setText("Zapamti");
+        btnZapamti.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDodajActionPerformed(evt);
+                btnZapamtiActionPerformed(evt);
             }
         });
 
@@ -63,7 +64,7 @@ public class FrmAddSertifikat extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnDodaj)
+                        .addComponent(btnZapamti)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnIzlaz))
                     .addGroup(layout.createSequentialGroup()
@@ -93,7 +94,7 @@ public class FrmAddSertifikat extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnIzlaz)
-                    .addComponent(btnDodaj))
+                    .addComponent(btnZapamti))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -102,7 +103,7 @@ public class FrmAddSertifikat extends javax.swing.JPanel {
        this.getTopLevelAncestor().setVisible(false); 
     }//GEN-LAST:event_btnIzlazActionPerformed
 
-    private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
+    private void btnZapamtiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZapamtiActionPerformed
         try{
         String naziv = txtNaziv.getText().toUpperCase(); 
         String opis = txtOpis.getText().trim(); 
@@ -118,23 +119,23 @@ public class FrmAddSertifikat extends javax.swing.JPanel {
         }
         Sertifikat sertifikat = new Sertifikat(naziv,opis);
         Controller controller = Controller.getInstance();
-            controller.createSertifikat(sertifikat);
-            JOptionPane.showMessageDialog(this, "Sertifikat je uspešno sačuvan u bazi!", "Sačuvan sertifikat!", JOptionPane.INFORMATION_MESSAGE);
+            controller.ubaciSertifikat(sertifikat);
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio sertifikat!", "Zapamćen sertifikat!", JOptionPane.INFORMATION_MESSAGE);
             this.getTopLevelAncestor().setVisible(false);
         }
         catch (Exception ex) {
             if (ex.getMessage().contains("Duplicate entry")) { 
         JOptionPane.showMessageDialog(this, "Već postoji dati sertifikat u bazi!", "Greška", JOptionPane.ERROR_MESSAGE);
     } else {
-        JOptionPane.showMessageDialog(this, "Došlo je do greške: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Sistem ne može da zapamti sertifikat!" + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
     }
         }
-    }//GEN-LAST:event_btnDodajActionPerformed
+    }//GEN-LAST:event_btnZapamtiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDodaj;
     private javax.swing.JButton btnIzlaz;
+    private javax.swing.JButton btnZapamti;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField txtNaziv;

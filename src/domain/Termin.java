@@ -57,7 +57,7 @@ public class Termin {
 
     @Override
     public String toString() {
-        return "Termin{" + "idTermin=" + idTermin + ", datum=" + datum + ", cenaPoSatu=" + cenaPoSatu + '}';
+        return "Datum: " + datum + " Cena po satu: " + cenaPoSatu;
     }
     
 }

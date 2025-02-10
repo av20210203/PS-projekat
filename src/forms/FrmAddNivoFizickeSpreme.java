@@ -13,11 +13,12 @@ import logic.Controller;
  * @author Aleksa
  */
 public class FrmAddNivoFizickeSpreme extends javax.swing.JPanel {
-
+NivoFizickeSpreme n;
     /**
      * Creates new form FrmAddNivoFizickeSpreme
      */
-    public FrmAddNivoFizickeSpreme() {
+    public FrmAddNivoFizickeSpreme(NivoFizickeSpreme n) {
+        this.n=n;
         initComponents();
     }
 
@@ -115,17 +116,14 @@ public class FrmAddNivoFizickeSpreme extends javax.swing.JPanel {
          JOptionPane.showMessageDialog(null, "Opis mora imati bar 10 karaktera!", "Greška", JOptionPane.ERROR_MESSAGE);
         return;
         }
-       NivoFizickeSpreme n = new NivoFizickeSpreme(nivo,opis);
+      n.setNivo(nivo);
+      n.setOpis(opis);
        Controller controller = Controller.getInstance();
-            controller.createNivo(n);
-            JOptionPane.showMessageDialog(this, "Nivo fizičke spreme je uspešno sačuvan u bazi!", "Sačuvan nivo fizičke spreme!", JOptionPane.INFORMATION_MESSAGE);
+       controller.updateNivoFizickeSpreme(n);
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio nivo fizičke spreme!" + "\n"+ n, "Sačuvan nivo fizičke spreme!", JOptionPane.INFORMATION_MESSAGE);
             this.getTopLevelAncestor().setVisible(false);
         } catch (Exception ex) {
-            if (ex.getMessage().contains("Duplicate entry")) { 
-        JOptionPane.showMessageDialog(this, "Već postoji dati nivo fizičke spreme u bazi!", "Greška", JOptionPane.ERROR_MESSAGE);
-    } else {
-        JOptionPane.showMessageDialog(this, "Došlo je do greške: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
-    }
+        JOptionPane.showMessageDialog(this, "Sistem ne može da zapamti nivo fizičke spreme!", "Greška", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnDodajActionPerformed
 

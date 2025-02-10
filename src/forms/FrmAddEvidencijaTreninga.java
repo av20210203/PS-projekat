@@ -4,17 +4,45 @@
  */
 package forms;
 
+import components.StavkaTableModel;
+import domain.EvidencijaTreninga;
+import domain.Klijent;
+import domain.NivoFizickeSpreme;
+import domain.StavkaEvidencijeTreninga;
+import domain.Termin;
+import domain.Trener;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
+import logic.Controller;
+
 /**
  *
  * @author Aleksa
  */
 public class FrmAddEvidencijaTreninga extends javax.swing.JPanel {
-
+private int trenutniRedniBroj;
+private StavkaTableModel modelTabele;
+private List<StavkaEvidencijeTreninga> stavke;
+private int ukupnaCena;
+EvidencijaTreninga ev;
     /**
      * Creates new form FrmAddEvidencijaTreninga
      */
-    public FrmAddEvidencijaTreninga() {
+    public FrmAddEvidencijaTreninga(EvidencijaTreninga ev) throws SQLException {
+        this.ev=ev;
         initComponents();
+        prepareView();
+        
     }
 
     /**
@@ -28,11 +56,78 @@ public class FrmAddEvidencijaTreninga extends javax.swing.JPanel {
 
         cmbTrener = new javax.swing.JComboBox<>();
         cmbKlijent = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtUkupnaCena = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        btnIzlaz = new javax.swing.JButton();
+        btnDodaj = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblStavke = new javax.swing.JTable();
         cmbTermin = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        txtVremeDo = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txtVremeOd = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        cmbOcena = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        btnDodajStavku = new javax.swing.JButton();
 
-        cmbTermin.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText("Trener:");
+
+        jLabel2.setText("Klijent:");
+
+        txtUkupnaCena.setEditable(false);
+        txtUkupnaCena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbTerminActionPerformed(evt);
+                txtUkupnaCenaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Ukupna cena:");
+
+        btnIzlaz.setText("Izađi");
+        btnIzlaz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzlazActionPerformed(evt);
+            }
+        });
+
+        btnDodaj.setText("Dodaj");
+        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDodajActionPerformed(evt);
+            }
+        });
+
+        tblStavke.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblStavke);
+
+        jLabel4.setText("Termin:");
+
+        jLabel5.setText("Vreme od:");
+
+        jLabel6.setText("Vreme do:");
+
+        cmbOcena.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+
+        jLabel7.setText("Ocena:");
+
+        btnDodajStavku.setText("Dodaj stavku");
+        btnDodajStavku.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDodajStavkuActionPerformed(evt);
             }
         });
 
@@ -40,35 +135,221 @@ public class FrmAddEvidencijaTreninga extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbTermin, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbKlijent, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbTrener, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(262, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbOcena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtVremeDo)
+                                .addComponent(cmbTrener, 0, 477, Short.MAX_VALUE)
+                                .addComponent(cmbKlijent, 0, 477, Short.MAX_VALUE)
+                                .addComponent(cmbTermin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtVremeOd)))
+                        .addGap(20, 20, 20)
+                        .addComponent(btnDodajStavku))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnDodaj)
+                            .addComponent(btnIzlaz)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUkupnaCena, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(83, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 68, Short.MAX_VALUE)))
+                .addGap(25, 25, 25))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(61, 61, 61)
-                .addComponent(cmbTrener, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbTrener, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbKlijent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addComponent(cmbKlijent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbTermin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtVremeOd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtVremeDo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbOcena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(btnDodajStavku))
                 .addGap(18, 18, 18)
-                .addComponent(cmbTermin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(226, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtUkupnaCena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDodaj)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnIzlaz)
+                .addGap(25, 25, 25))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmbTerminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTerminActionPerformed
+    private void txtUkupnaCenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUkupnaCenaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmbTerminActionPerformed
+    }//GEN-LAST:event_txtUkupnaCenaActionPerformed
+
+    private void btnIzlazActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzlazActionPerformed
+        this.getTopLevelAncestor().setVisible(false);
+    }//GEN-LAST:event_btnIzlazActionPerformed
+
+    private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
+    try {
+        Trener trener = (Trener) cmbTrener.getSelectedItem();
+        Klijent klijent = (Klijent) cmbKlijent.getSelectedItem();
+        
+        ev.setKlijent(klijent);
+        ev.setTrener(trener);
+        ev.setUkupnaCena((long)ukupnaCena);
+        Controller controller = Controller.getInstance();
+            controller.updateEvidencijaTreninga(ev, stavke);
+         JOptionPane.showMessageDialog(this, "Sistem je zapamtio evidenciju treninga!" + "\n"+ ev, "Sačuvana evidencija treninga!", JOptionPane.INFORMATION_MESSAGE);
+        this.getTopLevelAncestor().setVisible(false);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+         JOptionPane.showMessageDialog(null, "Sistem ne može da zapamti evidenciju treninga", "Greška!", JOptionPane.ERROR_MESSAGE);
+    }
+        
+        
+        
+    }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnDodajStavkuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajStavkuActionPerformed
+       try {
+    
+    LocalTime vremeOd = LocalTime.parse(txtVremeOd.getText(), DateTimeFormatter.ofPattern("HH:mm"));
+    LocalTime vremeDo = LocalTime.parse(txtVremeDo.getText(), DateTimeFormatter.ofPattern("HH:mm"));
+Termin termin = (Termin) cmbTermin.getSelectedItem();
+        Long ocena =  Long.parseLong((String) cmbOcena.getSelectedItem());
+        Long rb = (long) trenutniRedniBroj;
+        Long brojSati = ChronoUnit.HOURS.between(vremeOd, vremeDo);
+        Long cena = brojSati * termin.getCenaPoSatu();
+   
+    if (vremeOd.isAfter(vremeDo)) {
+        JOptionPane.showMessageDialog(null, "Vreme od mora biti pre vremena do.", "Greška", JOptionPane.ERROR_MESSAGE);
+        return; 
+    }
+       
+        for (StavkaEvidencijeTreninga stavka : stavke) {
+                if(termin.getDatum().equals(stavka.getTermin().getDatum())){
+                if ((vremeOd.isBefore(stavka.getVremeDo()) && vremeDo.isAfter(stavka.getVremeOd()))) {
+                    JOptionPane.showMessageDialog(null, "Trening se preklapa sa već postojećim!", "Greška", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                }
+            }
+        
+        
+        StavkaEvidencijeTreninga stavka = new StavkaEvidencijeTreninga(rb, ocena, vremeOd, vremeDo, cena, termin);
+        stavke.add(stavka);
+        modelTabele.dodajStavku(stavka);
+         trenutniRedniBroj++;
+         txtVremeOd.setText("");
+        txtVremeDo.setText("");
+        cmbTermin.setSelectedIndex(0);
+        cmbOcena.setSelectedIndex(0);
+        
+        ukupnaCena += stavka.getCena();
+       txtUkupnaCena.setText(String.valueOf(ukupnaCena));
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(null, "Greška pri unosu podataka! Proverite format.", "Greška", JOptionPane.ERROR_MESSAGE);
+       }
+         
+    }//GEN-LAST:event_btnDodajStavkuActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cmbKlijent;
-    private javax.swing.JComboBox<String> cmbTermin;
-    private javax.swing.JComboBox<String> cmbTrener;
+    private javax.swing.JButton btnDodaj;
+    private javax.swing.JButton btnDodajStavku;
+    private javax.swing.JButton btnIzlaz;
+    private javax.swing.JComboBox<Klijent> cmbKlijent;
+    private javax.swing.JComboBox<String> cmbOcena;
+    private javax.swing.JComboBox<Termin> cmbTermin;
+    private javax.swing.JComboBox<Trener> cmbTrener;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblStavke;
+    private javax.swing.JTextField txtUkupnaCena;
+    private javax.swing.JTextField txtVremeDo;
+    private javax.swing.JTextField txtVremeOd;
     // End of variables declaration//GEN-END:variables
+
+    private void prepareView() throws SQLException {
+       fillTrener();
+       fillKlijent();
+       fillTermin();
+       trenutniRedniBroj = 1;
+        ukupnaCena = 0;
+       modelTabele = new StavkaTableModel();
+       stavke = new ArrayList<>();
+    tblStavke.setModel(modelTabele);
+    txtUkupnaCena.setText(String.valueOf(ukupnaCena));
+    }
+
+    private void fillTrener() throws SQLException {
+        Controller controller = Controller.getInstance();
+        List<Trener> treneri = controller.getAllTrener();
+        List<Trener> filtriraniTreneri = treneri.stream()
+    .filter(trener -> !trener.getIme().equals(""))
+    .collect(Collectors.toList());
+        for(Trener t : filtriraniTreneri){
+        cmbTrener.addItem(t);
+        }
+    }
+
+    private void fillKlijent() throws SQLException {
+        Controller controller = Controller.getInstance();
+        List<Klijent> klijenti = controller.getAllKlijent();
+        List<Klijent> filtriraniKlijenti = klijenti.stream()
+    .filter(klijent -> !klijent.getIme().equals(""))
+    .collect(Collectors.toList());
+        for(Klijent k : filtriraniKlijenti){
+        cmbKlijent.addItem(k);
+        }
+    }
+    private void fillTermin() throws SQLException {
+        Controller controller = Controller.getInstance();
+        List<Termin> termini = controller.getAllTermini();
+        List<Termin> filtriraniTremini = termini.stream()
+    .filter(termin -> termin.getCenaPoSatu()!=0)
+    .collect(Collectors.toList());
+        for(Termin t : filtriraniTremini){
+        cmbTermin.addItem(t);
+        }
+    }
 }

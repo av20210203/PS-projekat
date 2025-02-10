@@ -18,11 +18,12 @@ import logic.Controller;
  * @author Aleksa
  */
 public class FrmAddTrener extends javax.swing.JPanel {
-
+Trener trener;
     /**
      * Creates new form frmRegister
      */
-    public FrmAddTrener() throws SQLException {
+    public FrmAddTrener(Trener trener) throws SQLException {
+        this.trener = trener;
         prepareView();
         
     }
@@ -49,7 +50,7 @@ public class FrmAddTrener extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        btnRegister = new javax.swing.JButton();
+        btnZapamti = new javax.swing.JButton();
         txtIzlaz = new javax.swing.JButton();
         txtPass1 = new javax.swing.JPasswordField();
         txtPass = new javax.swing.JPasswordField();
@@ -81,10 +82,10 @@ public class FrmAddTrener extends javax.swing.JPanel {
 
         jLabel6.setText("Ponovi lozinku:");
 
-        btnRegister.setText("Registruj se");
-        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+        btnZapamti.setText("Zapamti");
+        btnZapamti.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegisterActionPerformed(evt);
+                btnZapamtiActionPerformed(evt);
             }
         });
 
@@ -135,7 +136,7 @@ public class FrmAddTrener extends javax.swing.JPanel {
                             .addComponent(txtPass)))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnRegister)
+                            .addComponent(btnZapamti)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(txtIzlaz))
                         .addGroup(layout.createSequentialGroup()
@@ -182,7 +183,7 @@ public class FrmAddTrener extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegister)
+                    .addComponent(btnZapamti)
                     .addComponent(txtIzlaz))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
@@ -192,7 +193,7 @@ public class FrmAddTrener extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtImeActionPerformed
 
-    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+    private void btnZapamtiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZapamtiActionPerformed
        try{
         String ime = txtIme.getText().trim();
        String prezime = txtPrezime.getText().trim();
@@ -233,21 +234,27 @@ if (!pass.matches("^(?=.*[A-Z])(?=.*\\d).+$")) {
         ime = ime.substring(0, 1).toUpperCase() + ime.substring(1).toLowerCase();
     prezime = prezime.substring(0, 1).toUpperCase() + prezime.substring(1).toLowerCase();
     
-       Trener trener = new Trener(ime, prezime, username, pass, email   );
+       trener.setIme(ime);
+       trener.setPrezime(prezime);
+       trener.setKorisnickoIme(username);
+       trener.setSifra(pass);
+       trener.setEmail(email);
+       
        Controller controller = Controller.getInstance();
-       controller.register(trener, sertifikati);
-       JOptionPane.showMessageDialog(this, "Uspešno ste registrovani!", "Uspešno!", JOptionPane.INFORMATION_MESSAGE);
+            controller.updateTrener(trener, sertifikati);
+            
+            JOptionPane.showMessageDialog(this, "Sistem je zapamtio trenera!" + "\n" + trener, "Sačuvan trener!", JOptionPane.INFORMATION_MESSAGE);
    this.getTopLevelAncestor().setVisible(false);
        }catch (Exception ex) {
    
     if (ex.getMessage().contains("Duplicate entry")) { 
         JOptionPane.showMessageDialog(this, "Već postoji trener sa datim korisničkim imenom ili emailom!", "Greška", JOptionPane.ERROR_MESSAGE);
     } else {
-        JOptionPane.showMessageDialog(this, "Došlo je do greške: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Sistem ne može da zapamti trenera! ", "Greška", JOptionPane.ERROR_MESSAGE);
     }
     
 }
-    }//GEN-LAST:event_btnRegisterActionPerformed
+    }//GEN-LAST:event_btnZapamtiActionPerformed
 
     private void txtIzlazActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIzlazActionPerformed
     this.getTopLevelAncestor().setVisible(false);        // TODO add your handling code here:
@@ -263,7 +270,7 @@ if (!pass.matches("^(?=.*[A-Z])(?=.*\\d).+$")) {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRegister;
+    private javax.swing.JButton btnZapamti;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

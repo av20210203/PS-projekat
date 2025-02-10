@@ -2,6 +2,7 @@ package domain;
 
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -16,15 +17,15 @@ public class StavkaEvidencijeTreninga {
     private Long rb;
     private EvidencijaTreninga evidencijaTreninga;
     private Long ocena;
-    private LocalDateTime vremeOd;
-    private LocalDateTime vremeDo;
+    private LocalTime vremeOd;
+    private LocalTime vremeDo;
     private Long cena;
     private Termin termin;
 
     public StavkaEvidencijeTreninga() {
     }
 
-    public StavkaEvidencijeTreninga(Long rb, EvidencijaTreninga evidencijaTreninga, Long ocena, LocalDateTime vremeOd, LocalDateTime vremeDo, Long cena, Termin termin) {
+    public StavkaEvidencijeTreninga(Long rb, EvidencijaTreninga evidencijaTreninga, Long ocena, LocalTime vremeOd, LocalTime vremeDo, Long cena, Termin termin) {
         this.rb = rb;
         this.evidencijaTreninga = evidencijaTreninga;
         this.ocena = ocena;
@@ -38,6 +39,15 @@ public class StavkaEvidencijeTreninga {
         return rb;
     }
 
+    public StavkaEvidencijeTreninga(Long rb, Long ocena, LocalTime vremeOd, LocalTime vremeDo, Long cena, Termin termin) {
+        this.rb = rb;
+        this.ocena = ocena;
+        this.vremeOd = vremeOd;
+        this.vremeDo = vremeDo;
+        this.cena = cena;
+        this.termin = termin;
+    }
+
     public EvidencijaTreninga getEvidencijaTreninga() {
         return evidencijaTreninga;
     }
@@ -46,11 +56,11 @@ public class StavkaEvidencijeTreninga {
         return ocena;
     }
 
-    public LocalDateTime getVremeOd() {
+    public LocalTime getVremeOd() {
         return vremeOd;
     }
 
-    public LocalDateTime getVremeDo() {
+    public LocalTime getVremeDo() {
         return vremeDo;
     }
 
@@ -74,11 +84,11 @@ public class StavkaEvidencijeTreninga {
         this.ocena = ocena;
     }
 
-    public void setVremeOd(LocalDateTime vremeOd) {
+    public void setVremeOd(LocalTime vremeOd) {
         this.vremeOd = vremeOd;
     }
 
-    public void setVremeDo(LocalDateTime vremeDo) {
+    public void setVremeDo(LocalTime vremeDo) {
         this.vremeDo = vremeDo;
     }
 

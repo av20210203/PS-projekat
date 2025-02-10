@@ -5,9 +5,11 @@
 package logic;
 
 import database.DatabaseBroker;
+import domain.EvidencijaTreninga;
 import domain.Klijent;
 import domain.NivoFizickeSpreme;
 import domain.Sertifikat;
+import domain.StavkaEvidencijeTreninga;
 import domain.Termin;
 import domain.Trener;
 import java.sql.SQLException;
@@ -35,8 +37,8 @@ public class Controller {
         return dbbr.getTrenerByPass(trener);
     }
 
-    public void register(Trener trener, List<Sertifikat> sertifikati) throws SQLException {
-        dbbr.registerTrener(trener, sertifikati);
+    public void createTrener(Trener trener) throws SQLException {
+        dbbr.createTreneri(trener);
     }
 
     public List<NivoFizickeSpreme> getAllNivo() throws SQLException {
@@ -51,15 +53,57 @@ public class Controller {
         return dbbr.getAllSertifikati();
     }
 
-    public void createSertifikat(Sertifikat sertifikat) throws SQLException {
-        dbbr.createSertifikati(sertifikat);   
+    public void ubaciSertifikat(Sertifikat sertifikat) throws SQLException {
+        dbbr.ubaciSertifikati(sertifikat);   
     }
 
-    public void createNivo(NivoFizickeSpreme n) throws SQLException {
-    dbbr.createNivoi(n);
+    public void createNivoFizickeSpreme(NivoFizickeSpreme n) throws SQLException {
+    dbbr.createNivoiFizickeSpreme(n);
     }
 
-    public void createTermin(Termin termin) {
+    public void createTermin(Termin termin) throws SQLException {
         dbbr.createTermini(termin);
     }
+
+    public List<Trener> getAllTrener() throws SQLException {
+   return dbbr.getAllTreneri();
+    }
+
+    public List<Klijent> getAllKlijent() throws SQLException {
+        return dbbr.getAllKlijenti();
+    }
+
+    public List<Termin> getAllTermini() throws SQLException {
+        return dbbr.getAllTermini();
+    }
+
+    public void createEvidencijaTreninga(EvidencijaTreninga ev) throws SQLException {
+        dbbr.createEvidencijeTreninga(ev);
+    }
+
+    public void updateKlijent(Klijent klijent) throws SQLException {
+        dbbr.updateKlijenti(klijent);
+    }
+
+    public void updateTrener(Trener trener, List<Sertifikat> sertifikati) throws SQLException {
+    dbbr.updateTreneri(trener, sertifikati);
+    }
+
+    public void updateTermin(Termin termin) throws SQLException {
+        dbbr.updateTermini(termin);
+    }
+
+    public void updateNivoFizickeSpreme(NivoFizickeSpreme n) throws SQLException {
+        dbbr.updateNivoiFizickeSpreme(n);
+    }
+
+    public void updateEvidencijaTreninga(EvidencijaTreninga ev, List<StavkaEvidencijeTreninga> stavke) {
+        dbbr.updateEvidencijeTreninga(ev, stavke);
+    }
+
+    
+
+    
+
+   
 }
