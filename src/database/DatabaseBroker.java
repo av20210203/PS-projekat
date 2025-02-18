@@ -407,9 +407,102 @@ Connection connection = DatabaseConnection.getInstance().getConnection();
             int result1 = statement1.executeUpdate();
     }
 
-   
-
+  
     
     
 }
+
+    public List<NivoFizickeSpreme> pretraziNivoe(String naziv) throws SQLException {
+         List<NivoFizickeSpreme> nivoi = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM nivofizickespreme WHERE nivo LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, "%" + naziv + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            NivoFizickeSpreme nivo = new NivoFizickeSpreme();
+            nivo.setIdNivoFizickeSpreme(rs.getLong("idNivoFizickeSpreme"));  
+            nivo.setNivo(rs.getString("nivo"));
+            nivo.setOpis(rs.getString("opis"));
+            nivoi.add(nivo);
+        }
+        return nivoi;
+    }
+
+    public List<Sertifikat> pretraziSertifikate(String naziv) throws SQLException {
+        List<Sertifikat> sertifikati = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM sertifikat WHERE naziv LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, "%" + naziv + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Sertifikat sertifikat = new Sertifikat();
+            sertifikat.setIdSertifikat(rs.getLong("idSertifikat"));  
+            sertifikat.setNaziv(rs.getString("naziv"));
+            sertifikat.setOpis(rs.getString("opis"));
+            sertifikati.add(sertifikat);
+        }
+        return sertifikati;
+        }
+
+    public List<Termin> pretraziTermine(LocalDate datum, Long cena) throws SQLException {
+        List<Termin> termini = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM termin WHERE datum LIKE ? AND cenaPoSatu LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setDate(1, Date.valueOf(datum));
+        ps.setLong(2, cena);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Termin termin = new Termin();
+            termin.setIdTermin(rs.getLong("idTermin"));  
+            termin.setDatum(rs.getDate("datum").toLocalDate());
+            termin.setCenaPoSatu(rs.getLong("cenaPoSatu"));
+            termini.add(termin);
+        }
+        return termini;
+    }
+
+    public List<Termin> pretraziTermine(LocalDate datum) throws SQLException {
+        List<Termin> termini = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM termin WHERE datum LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setDate(1, Date.valueOf(datum));
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Termin termin = new Termin();
+            termin.setIdTermin(rs.getLong("idTermin"));  
+            termin.setDatum(rs.getDate("datum").toLocalDate());
+            termin.setCenaPoSatu(rs.getLong("cenaPoSatu"));
+            termini.add(termin);
+        }
+        return termini;
+    }
+
+    public List<Termin> pretraziTermine(Long cena) throws SQLException {
+        List<Termin> termini = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM termin WHERE cenaPoSatu LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, cena);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Termin termin = new Termin();
+            termin.setIdTermin(rs.getLong("idTermin"));  
+            termin.setDatum(rs.getDate("datum").toLocalDate());
+            termin.setCenaPoSatu(rs.getLong("cenaPoSatu"));
+            termini.add(termin);
+        }
+        return termini;
+    }
+
 }

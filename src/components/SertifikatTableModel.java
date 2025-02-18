@@ -5,7 +5,7 @@
 package components;
 
 import domain.NivoFizickeSpreme;
-import domain.StavkaEvidencijeTreninga;
+import domain.Sertifikat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -13,36 +13,35 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Aleksa
  */
-public class NivoTableModel extends AbstractTableModel{
-private List<NivoFizickeSpreme> nivoi;
-    String[] columns = {"Id","Nivo"};
-
-    public NivoTableModel(List<NivoFizickeSpreme> nivoi) {
-        this.nivoi = nivoi;
+public class SertifikatTableModel extends AbstractTableModel{
+private List<Sertifikat> sertifikati;
+String[] columns = {"Id","Naziv"};
+    public SertifikatTableModel(List<Sertifikat> sertifikati) {
+        this.sertifikati = sertifikati;
     }
-        
+
+
     @Override
     public int getRowCount() {
-if (nivoi == null) {
+        if (sertifikati == null) {
             return 0;
         }
-        return nivoi.size();    }
+        return sertifikati.size(); 
+    }
 
     @Override
     public int getColumnCount() {
         return columns.length;
     }
 
-    @Override
+     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        NivoFizickeSpreme nivo = nivoi.get(rowIndex);
+        Sertifikat sertifikat = sertifikati.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return nivo.getIdNivoFizickeSpreme();
+                return sertifikat.getIdSertifikat();
                 case 1:
-                return nivo.getNivo();
-                
-                
+                return sertifikat.getNaziv();
             default:
                 throw new AssertionError();
         }
@@ -51,7 +50,8 @@ if (nivoi == null) {
     public String getColumnName(int column) {
         return columns[column];
     }
-    public NivoFizickeSpreme getNivo(int row) {
-        return nivoi.get(row);
+    public Sertifikat getSertifikat(int row) {
+        return sertifikati.get(row);
     }
+    
 }

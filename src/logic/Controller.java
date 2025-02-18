@@ -13,6 +13,7 @@ import domain.StavkaEvidencijeTreninga;
 import domain.Termin;
 import domain.Trener;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -97,8 +98,28 @@ public class Controller {
         dbbr.updateNivoiFizickeSpreme(n);
     }
 
-    public void updateEvidencijaTreninga(EvidencijaTreninga ev, List<StavkaEvidencijeTreninga> stavke) {
+    public void updateEvidencijaTreninga(EvidencijaTreninga ev, List<StavkaEvidencijeTreninga> stavke) throws SQLException {
         dbbr.updateEvidencijeTreninga(ev, stavke);
+    }
+
+    public List<NivoFizickeSpreme> pretraziNivo(String naziv) throws SQLException {
+        return dbbr.pretraziNivoe(naziv);
+    }
+
+    public List<Sertifikat> pretraziSertifikat(String naziv) throws SQLException {
+    return dbbr.pretraziSertifikate(naziv);
+        }
+
+    public List<Termin> pretraziTermin(LocalDate datum, Long cena) throws SQLException {
+        return dbbr.pretraziTermine(datum, cena);
+    }
+
+    public List<Termin> pretraziTermin(LocalDate datum) throws SQLException {
+        return dbbr.pretraziTermine(datum);
+    }
+
+    public List<Termin> pretraziTermin(Long cena) {
+        return dbbr.pretraziTermine(cena);
     }
 
     

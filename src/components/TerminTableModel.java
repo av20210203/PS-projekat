@@ -5,7 +5,7 @@
 package components;
 
 import domain.NivoFizickeSpreme;
-import domain.StavkaEvidencijeTreninga;
+import domain.Termin;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -13,20 +13,20 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Aleksa
  */
-public class NivoTableModel extends AbstractTableModel{
-private List<NivoFizickeSpreme> nivoi;
-    String[] columns = {"Id","Nivo"};
+public class TerminTableModel extends AbstractTableModel{
+private List<Termin> termini;
+    String[] columns = {"Id","Datum"};
 
-    public NivoTableModel(List<NivoFizickeSpreme> nivoi) {
-        this.nivoi = nivoi;
+    public TerminTableModel(List<Termin> termini) {
+        this.termini = termini;
     }
         
     @Override
     public int getRowCount() {
-if (nivoi == null) {
+if (termini == null) {
             return 0;
         }
-        return nivoi.size();    }
+        return termini.size();    }
 
     @Override
     public int getColumnCount() {
@@ -35,12 +35,12 @@ if (nivoi == null) {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        NivoFizickeSpreme nivo = nivoi.get(rowIndex);
+        Termin termin = termini.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return nivo.getIdNivoFizickeSpreme();
+                return termin.getIdTermin();
                 case 1:
-                return nivo.getNivo();
+                return termin.getDatum();
                 
                 
             default:
@@ -51,7 +51,7 @@ if (nivoi == null) {
     public String getColumnName(int column) {
         return columns[column];
     }
-    public NivoFizickeSpreme getNivo(int row) {
-        return nivoi.get(row);
+    public Termin getTermin(int row) {
+        return termini.get(row);
     }
 }

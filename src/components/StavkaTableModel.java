@@ -52,7 +52,7 @@ public class StavkaTableModel extends AbstractTableModel {
 
     public void dodajStavku(StavkaEvidencijeTreninga stavka) {
         stavke.add(stavka);
-        fireTableDataChanged();  // Osvježava tabelu
+        fireTableDataChanged();  
     }
 
     public void obrisiStavku(int index) {

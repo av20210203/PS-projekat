@@ -4,10 +4,22 @@
  */
 package forms;
 
+import components.NivoTableModel;
+import components.TerminTableModel;
+import domain.NivoFizickeSpreme;
 import domain.Termin;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableModel;
 import logic.Controller;
 
 /**
@@ -19,8 +31,9 @@ public class FrmTermin extends javax.swing.JFrame {
     /**
      * Creates new form FrmTermin
      */
-    public FrmTermin() {
-        initComponents();
+    public FrmTermin() throws SQLException {
+        
+        prepareView();
     }
 
     /**
@@ -34,6 +47,22 @@ public class FrmTermin extends javax.swing.JFrame {
 
         btnKreiraj = new javax.swing.JButton();
         btnIzađi = new javax.swing.JButton();
+        cmbDatum = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        cmbCena = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblTermin = new javax.swing.JTable();
+        lblPoruka = new javax.swing.JLabel();
+        btnPretrazi = new javax.swing.JButton();
+        txtDatum = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        btnDetalji = new javax.swing.JButton();
+        btnPrikaziSve = new javax.swing.JButton();
+        btnResetDatum = new javax.swing.JButton();
+        btnResetCena = new javax.swing.JButton();
+        txtCena = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,27 +80,151 @@ public class FrmTermin extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Datum:");
+
+        jLabel2.setText("Cena:");
+
+        tblTermin.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblTermin);
+
+        btnPretrazi.setText("Pretraži");
+        btnPretrazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPretraziActionPerformed(evt);
+            }
+        });
+
+        txtDatum.setEditable(false);
+
+        jLabel3.setText("Datum:");
+
+        jLabel4.setText("Cena po satu:");
+
+        btnDetalji.setText("Detalji");
+        btnDetalji.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetaljiActionPerformed(evt);
+            }
+        });
+
+        btnPrikaziSve.setText("Prikaži sve");
+        btnPrikaziSve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrikaziSveActionPerformed(evt);
+            }
+        });
+
+        btnResetDatum.setText("Resetuj");
+        btnResetDatum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetDatumActionPerformed(evt);
+            }
+        });
+
+        btnResetCena.setText("Resetuj");
+        btnResetCena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetCenaActionPerformed(evt);
+            }
+        });
+
+        txtCena.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(btnKreiraj)
-                .addContainerGap(285, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnIzađi)
-                .addGap(23, 23, 23))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(46, 46, 46)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(btnIzađi))
+                            .addComponent(lblPoruka, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(btnKreiraj)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbCena, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnResetCena))
+                            .addComponent(btnPretrazi, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbDatum, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnResetDatum))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDatum, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                            .addComponent(txtCena))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnPrikaziSve)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDetalji)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(btnKreiraj)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
-                .addComponent(btnIzađi)
-                .addGap(36, 36, 36))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnKreiraj)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(btnResetDatum))
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(cmbCena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnResetCena))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPretrazi)))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtCena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPrikaziSve)
+                    .addComponent(btnDetalji))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(193, 193, 193)
+                        .addComponent(btnIzađi))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPoruka, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -100,13 +253,152 @@ public class FrmTermin extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnIzađiActionPerformed
 
+    private void btnPretraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretraziActionPerformed
+        
+        try {
+            if(cmbDatum.getSelectedIndex()!=-1&&cmbCena.getSelectedIndex()==-1){
+                LocalDate datum = (LocalDate) cmbDatum.getSelectedItem();
+                List<Termin> termini = Controller.getInstance().pretraziTermin(datum);
+                
+                TableModel terminTableModel = new TerminTableModel(termini);
+                tblTermin.setModel(terminTableModel);
+                if (termini.isEmpty()) {
+                    lblPoruka.setText("Sistem ne može da nađe termine po zadatim kriterijumima.");
+                    return;
+                }
+                
+                lblPoruka.setText("Sistem je našao termine po zadatim kriterijumima.");
+                return;
+            }
+            if(cmbCena.getSelectedIndex()!=-1&&cmbDatum.getSelectedIndex()==-1){
+                Long cena = (Long) cmbCena.getSelectedItem();
+                List<Termin> termini = Controller.getInstance().pretraziTermin(cena);
+                
+                TableModel terminTableModel = new TerminTableModel(termini);
+                tblTermin.setModel(terminTableModel);
+                if (termini.isEmpty()) {
+                    lblPoruka.setText("Sistem ne može da nađe termine po zadatim kriterijumima.");
+                    return;
+                }
+                
+                lblPoruka.setText("Sistem je našao termine po zadatim kriterijumima.");
+                return;
+            }
+            if(cmbCena.getSelectedIndex()==-1&&cmbDatum.getSelectedIndex()==-1){
+                fillTableTermin();
+                lblPoruka.setText("Sistem je našao termine po zadatim kriterijumima.");
+                return;
+            }
+            
+            LocalDate datum = (LocalDate) cmbDatum.getSelectedItem();
+            Long cena = (Long) cmbCena.getSelectedItem();
+            List<Termin> termini = Controller.getInstance().pretraziTermin(datum, cena);
+            
+            TableModel terminTableModel = new TerminTableModel(termini);
+            tblTermin.setModel(terminTableModel);
+            if (termini.isEmpty()) {
+                lblPoruka.setText("Sistem ne može da nađe termine po zadatim kriterijumima.");
+                return;
+            }
+
+            lblPoruka.setText("Sistem je našao termine po zadatim kriterijumima.");
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmTermin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
+    }//GEN-LAST:event_btnPretraziActionPerformed
+
+    private void btnDetaljiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetaljiActionPerformed
+        try{
+            if (tblTermin.getSelectedRow() != -1) {
+                int row = tblTermin.getSelectedRow();
+
+                TerminTableModel model = (TerminTableModel) tblTermin.getModel();
+                Termin termin = model.getTermin(row);
+                txtDatum.setText(termin.getDatum().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                txtCena.setText(termin.getCenaPoSatu().toString());
+                lblPoruka.setText("Sistem je našao termin");
+            } else {
+                txtDatum.setText("");
+                txtCena.setText("");
+                lblPoruka.setText("Sistem ne može da nađe termin");
+            }
+        }catch(Exception e){
+            lblPoruka.setText("Sistem ne može da nađe termin");
+        }
+    }//GEN-LAST:event_btnDetaljiActionPerformed
+
+    private void btnPrikaziSveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrikaziSveActionPerformed
+        fillTableTermin();
+    }//GEN-LAST:event_btnPrikaziSveActionPerformed
+
+    private void btnResetDatumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetDatumActionPerformed
+        cmbDatum.setSelectedIndex(-1);
+    }//GEN-LAST:event_btnResetDatumActionPerformed
+
+    private void btnResetCenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetCenaActionPerformed
+         cmbCena.setSelectedIndex(-1);
+    }//GEN-LAST:event_btnResetCenaActionPerformed
+
     /**
      * @param args the command line arguments
      */
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDetalji;
     private javax.swing.JButton btnIzađi;
     private javax.swing.JButton btnKreiraj;
+    private javax.swing.JButton btnPretrazi;
+    private javax.swing.JButton btnPrikaziSve;
+    private javax.swing.JButton btnResetCena;
+    private javax.swing.JButton btnResetDatum;
+    private javax.swing.JComboBox<Long> cmbCena;
+    private javax.swing.JComboBox<LocalDate> cmbDatum;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPoruka;
+    private javax.swing.JTable tblTermin;
+    private javax.swing.JTextField txtCena;
+    private javax.swing.JTextField txtDatum;
     // End of variables declaration//GEN-END:variables
+
+    private void prepareView() throws SQLException {
+        initComponents();
+        fillCmb();
+        tblTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+
+    private void fillCmb() throws SQLException {
+        Controller controller = Controller.getInstance();
+        List<Termin> termini = controller.getAllTermini();
+        List<Termin> filtriraniTremini = termini.stream()
+    .filter(termin -> termin.getCenaPoSatu()!=0)
+    .collect(Collectors.toList());
+        
+        for(Termin t : filtriraniTremini){
+        cmbCena.addItem(t.getCenaPoSatu());
+        }
+        for(Termin t : filtriraniTremini){
+        cmbDatum.addItem(t.getDatum());
+        }
+        cmbCena.setSelectedIndex(-1);
+        cmbDatum.setSelectedIndex(-1);
+    }
+
+    private void fillTableTermin() {
+try {
+        Controller controller = Controller.getInstance();
+        List<Termin> termini = controller.getAllTermini();
+        
+        TableModel terminTableModel = new TerminTableModel(termini);
+            tblTermin.setModel(terminTableModel);
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Greška pri učitavanju termina: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+    }
+        }
 }
