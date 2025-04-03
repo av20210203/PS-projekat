@@ -325,7 +325,7 @@ Termin termin = (Termin) cmbTermin.getSelectedItem();
         Controller controller = Controller.getInstance();
         List<Trener> treneri = controller.getAllTrener();
         List<Trener> filtriraniTreneri = treneri.stream()
-    .filter(trener -> !trener.getIme().equals(""))
+    .filter(trener -> !trener.getIme().equals("Nepoznato"))
     .collect(Collectors.toList());
         for(Trener t : filtriraniTreneri){
         cmbTrener.addItem(t);
@@ -336,7 +336,7 @@ Termin termin = (Termin) cmbTermin.getSelectedItem();
         Controller controller = Controller.getInstance();
         List<Klijent> klijenti = controller.getAllKlijent();
         List<Klijent> filtriraniKlijenti = klijenti.stream()
-    .filter(klijent -> !klijent.getIme().equals(""))
+    .filter(klijent -> !klijent.getIme().equals("Nepoznato"))
     .collect(Collectors.toList());
         for(Klijent k : filtriraniKlijenti){
         cmbKlijent.addItem(k);

@@ -247,16 +247,22 @@ Connection connection = DatabaseConnection.getInstance().getConnection();
     public List<Klijent> getAllKlijenti() throws SQLException {
         List<Klijent> klijenti = new ArrayList<>();
         Connection connection = DatabaseConnection.getInstance().getConnection();
-        String query = "SELECT idKlijent, ime, prezime, email FROM klijent";
+        String sql = "SELECT k.*, n.idNivoFizickeSpreme, n.nivo " + 
+                 "FROM klijent k " + 
+                 "JOIN nivofizickespreme n ON k.idNivoFizickeSpreme = n.idNivoFizickeSpreme";
+                 
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(query);
+        ResultSet rs = statement.executeQuery(sql);
         while (rs.next()) {
                 
                 Long id = rs.getLong("idKlijent");
                String ime = rs.getString("ime");
                String prezime = rs.getString("prezime");
                String email = rs.getString("email");
-               Klijent klijent = new Klijent(id,ime,prezime,email);
+               NivoFizickeSpreme nivo = new NivoFizickeSpreme();
+        nivo.setIdNivoFizickeSpreme(rs.getLong("n.idNivoFizickeSpreme"));
+        nivo.setNivo(rs.getString("n.nivo"));
+               Klijent klijent = new Klijent(id,ime,prezime,email,nivo);
                 klijenti.add(klijent);
             }
         rs.close();
@@ -504,5 +510,190 @@ Connection connection = DatabaseConnection.getInstance().getConnection();
         }
         return termini;
     }
+
+    public List<Klijent> pretraziKlijente(NivoFizickeSpreme nivo, String ime) throws SQLException {
+        List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM klijent WHERE idNivoFizickeSpreme LIKE ? AND ime LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, nivo.getIdNivoFizickeSpreme());
+        ps.setString(2, "%" + ime + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Klijent klijent = new Klijent();
+            klijent.setIdKlijent(rs.getLong("idKlijent"));  
+            klijent.setIme(rs.getString("ime"));
+            klijent.setPrezime(rs.getString("prezime"));
+            klijent.setEmail(rs.getString("email"));
+            klijent.setNivoFizickeSpreme(nivo);
+            klijenti.add(klijent);
+        }
+        return klijenti;
+    }
+
+    public List<Klijent> pretraziKlijenteP(NivoFizickeSpreme nivo, String prezime) throws SQLException {
+        List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM klijent WHERE idNivoFizickeSpreme LIKE ? AND prezime LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, nivo.getIdNivoFizickeSpreme());
+        ps.setString(2, "%" + prezime + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Klijent klijent = new Klijent();
+            klijent.setIdKlijent(rs.getLong("idKlijent"));  
+            klijent.setIme(rs.getString("ime"));
+            klijent.setPrezime(rs.getString("prezime"));
+            klijent.setEmail(rs.getString("email"));
+            klijent.setNivoFizickeSpreme(nivo);
+            klijenti.add(klijent);
+        }
+        return klijenti;
+    }
+
+    public List<Klijent> pretraziKlijente(String ime, String prezime) throws SQLException {
+    List<Klijent> klijenti = new ArrayList<>();
+    Connection connection = DatabaseConnection.getInstance().getConnection();
+    
+    String sql = "SELECT k.*, n.idNivoFizickeSpreme, n.nivo " + 
+                 "FROM klijent k " + 
+                 "JOIN nivofizickespreme n ON k.idNivoFizickeSpreme = n.idNivoFizickeSpreme " + 
+                 "WHERE k.ime LIKE ? AND k.prezime LIKE ?";
+    
+    PreparedStatement ps = connection.prepareStatement(sql);
+    ps.setString(1, "%" + ime + "%");
+    ps.setString(2, "%" + prezime + "%");
+    
+    ResultSet rs = ps.executeQuery();
+    
+    while (rs.next()) {
+        Klijent klijent = new Klijent();
+        klijent.setIdKlijent(rs.getLong("idKlijent"));
+        klijent.setIme(rs.getString("ime"));
+        klijent.setPrezime(rs.getString("prezime"));
+        klijent.setEmail(rs.getString("email"));
+
+        
+        NivoFizickeSpreme nivo = new NivoFizickeSpreme();
+        nivo.setIdNivoFizickeSpreme(rs.getLong("n.idNivoFizickeSpreme"));
+        nivo.setNivo(rs.getString("n.nivo"));
+
+        
+        klijent.setNivoFizickeSpreme(nivo);
+
+        klijenti.add(klijent);
+    }
+
+    return klijenti;
+}
+
+
+    public List<Klijent> pretraziKlijente(NivoFizickeSpreme nivo) throws SQLException {
+         List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM klijent WHERE idNivoFizickeSpreme LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1,nivo.getIdNivoFizickeSpreme());
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Klijent klijent = new Klijent();
+            klijent.setIdKlijent(rs.getLong("idKlijent"));  
+            klijent.setIme(rs.getString("ime"));
+            klijent.setPrezime(rs.getString("prezime"));
+            klijent.setEmail(rs.getString("email"));
+            klijent.setNivoFizickeSpreme(nivo);
+            klijenti.add(klijent);
+        }
+        return klijenti;
+    }
+
+    public List<Klijent> pretraziKlijente(String ime) throws SQLException {
+        List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT k.*, n.idNivoFizickeSpreme, n.nivo " + 
+                 "FROM klijent k " + 
+                 "JOIN nivofizickespreme n ON k.idNivoFizickeSpreme = n.idNivoFizickeSpreme " + 
+                 "WHERE k.ime LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+       ps.setString(1, "%" + ime + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Klijent klijent = new Klijent();
+            klijent.setIdKlijent(rs.getLong("idKlijent"));  
+            klijent.setIme(rs.getString("ime"));
+            klijent.setPrezime(rs.getString("prezime"));
+            klijent.setEmail(rs.getString("email"));
+           NivoFizickeSpreme nivo = new NivoFizickeSpreme();
+        nivo.setIdNivoFizickeSpreme(rs.getLong("n.idNivoFizickeSpreme"));
+        nivo.setNivo(rs.getString("n.nivo"));
+
+        
+        klijent.setNivoFizickeSpreme(nivo);
+            klijenti.add(klijent);
+        }
+        return klijenti;
+    }
+
+    public List<Klijent> pretraziKlijenteP(String prezime) throws SQLException {
+        List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT k.*, n.idNivoFizickeSpreme, n.nivo " + 
+                 "FROM klijent k " + 
+                 "JOIN nivofizickespreme n ON k.idNivoFizickeSpreme = n.idNivoFizickeSpreme " + 
+                 "WHERE k.prezime LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+       ps.setString(1, "%" + prezime + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Klijent klijent = new Klijent();
+            klijent.setIdKlijent(rs.getLong("idKlijent"));  
+            klijent.setIme(rs.getString("ime"));
+            klijent.setPrezime(rs.getString("prezime"));
+            klijent.setEmail(rs.getString("email"));
+           NivoFizickeSpreme nivo = new NivoFizickeSpreme();
+        nivo.setIdNivoFizickeSpreme(rs.getLong("n.idNivoFizickeSpreme"));
+        nivo.setNivo(rs.getString("n.nivo"));
+
+        
+        klijent.setNivoFizickeSpreme(nivo);
+            klijenti.add(klijent);
+        }
+        return klijenti;
+    }
+
+    public List<Klijent> pretraziKlijente(NivoFizickeSpreme nivo, String ime, String prezime) throws SQLException {
+        List<Klijent> klijenti = new ArrayList<>();
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM klijent WHERE idNivoFizickeSpreme LIKE ? AND ime LIKE ? AND prezime LIKE ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, nivo.getIdNivoFizickeSpreme());
+        ps.setString(2, "%" + ime + "%");
+       ps.setString(3, "%" + prezime + "%");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Klijent klijent = new Klijent();
+            klijent.setIdKlijent(rs.getLong("idKlijent"));  
+            klijent.setIme(rs.getString("ime"));
+            klijent.setPrezime(rs.getString("prezime"));
+            klijent.setEmail(rs.getString("email"));
+           klijent.setNivoFizickeSpreme(nivo);
+            klijenti.add(klijent);
+        }
+        return klijenti;
+    }
+
+   
 
 }

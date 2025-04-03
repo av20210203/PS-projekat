@@ -118,8 +118,36 @@ public class Controller {
         return dbbr.pretraziTermine(datum);
     }
 
-    public List<Termin> pretraziTermin(Long cena) {
+    public List<Termin> pretraziTermin(Long cena) throws SQLException {
         return dbbr.pretraziTermine(cena);
+    }
+
+    public List<Klijent> pretraziKlijent(NivoFizickeSpreme nivo, String ime) throws SQLException {
+        return dbbr.pretraziKlijente(nivo, ime);
+    }
+
+    public List<Klijent> pretraziKlijentP(NivoFizickeSpreme nivo, String prezime) throws SQLException {
+        return dbbr.pretraziKlijenteP(nivo, prezime);
+    }
+
+    public List<Klijent> pretraziKlijent(String ime, String prezime) throws SQLException {
+return dbbr.pretraziKlijente(ime, prezime);
+        }
+
+    public List<Klijent> pretraziKlijent(NivoFizickeSpreme nivo) throws SQLException {
+        return dbbr.pretraziKlijente(nivo);
+    }
+
+    public List<Klijent> pretraziKlijent(String ime) throws SQLException {
+        return dbbr.pretraziKlijente(ime);
+    }
+
+    public List<Klijent> pretraziKlijentP(String prezime) throws SQLException {
+        return dbbr.pretraziKlijenteP(prezime);
+    }
+
+    public List<Klijent> pretraziKlijent(NivoFizickeSpreme nivo, String ime, String prezime) throws SQLException {
+        return dbbr.pretraziKlijente(nivo,ime,prezime);
     }
 
     
